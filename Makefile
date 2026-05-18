@@ -1,52 +1,21 @@
-# Компилятор
-CC = gcc
+build: ## Build programm
+	@gcc main.c -L. -lintegration -o main
 
-# Флаги компиляции
-CFLAGS = -Wall -Wextra -Werror
+help: ## Show help
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_0-9-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
-# Папки
-SRC_DIR = src
-TEST_DIR = tests
-BUILD_DIR = build
+.PHONY: build help clean test
 
-# Исходные файлы
-SRC = $(SRC_DIR)/main.c $(SRC_DIR)/math.c
+libintegration.so: integration.c ## Compile shared library
+	@gcc --shared -fPIC $< -o $@
 
-# Файлы тестов
-TEST_SRC = $(TEST_DIR)/test_math.c $(SRC_DIR)/math.c
+clean: ## Remove temporary files
+	@rm -f main
+	@rm -f libintegration.so
 
-# Итоговые исполняемые файлы
-TARGET = $(BUILD_DIR)/app
-TEST_TARGET = $(BUILD_DIR)/test_app
+test: ## Test integration
+	@gcc test.c -L. -lintegration -o test
+	@./test
 
-# Главная цель
-all: $(TARGET)
-
-# Сборка программы
-$(TARGET):
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
-
-# Запуск программы
-run: $(TARGET)
-	./$(TARGET)
-
-# Сборка тестов
-test: $(TEST_TARGET)
-	./$(TEST_TARGET)
-	@echo "All tests passed!"
-
-# Компиляция тестов
-$(TEST_TARGET):
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(TEST_SRC) -o $(TEST_TARGET)
-
-# Очистка
-clean:
-	rm -rf $(BUILD_DIR)
-
-# Пересборка
-rebuild: clean all
-
-# Чтобы make не путал команды с файлами
-.PHONY: all run test clean rebuild
+.DEFAULT:
+	@printf 'Error: target %s does not exist\n' "'$@'"

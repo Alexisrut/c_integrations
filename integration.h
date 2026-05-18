@@ -1,5 +1,5 @@
-#ifndef INTEGRATIONS_H
-#define INTEGRATIONS_H
+#ifndef INTEGRATION_H
+#define INTEGRATION_H
 
 char* derivative_f(char f[], long double eps1);
 

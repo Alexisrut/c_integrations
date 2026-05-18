@@ -1,4 +1,4 @@
-#include "integrations.h"
+#include "integration.h"
 
 char* derivative_f(char f[], long double eps1) {
     
