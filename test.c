@@ -2,7 +2,7 @@
 #include "integration.h"
 
 int main(void) {
-    //assert();
-    //assert();
+    assert(diversion(f, jd));
+    assert();
     return 0;
 }

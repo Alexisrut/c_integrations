@@ -1,9 +1,13 @@
 #ifndef INTEGRATION_H
 #define INTEGRATION_H
 
-extern char* derivative_f(char f[], long double eps1);
+extern double f1 (double x);
+extern double f2 (double x);
+extern double f3 (double x);
+extern double df1 (double x);
+extern double df2 (double x);
+extern double df3 (double x);
 
-extern char* derivative_g(char g[], long double eps1);
 
 extern long double root(
     char f[],
