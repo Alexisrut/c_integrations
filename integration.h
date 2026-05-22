@@ -8,22 +8,25 @@ extern double df1 (double x);
 extern double df2 (double x);
 extern double df3 (double x);
 
+char* derivative_f(char f[]);
+char* derivative_g(char g[]);
 
-extern long double root(
-    char f[],
-    char g[],
-    long double a,
-    long double b,
-    long double eps1,
-    char* (*derivative_f)(char[], long double),
-    char* (*derivative_g)(char[], long double)
+
+extern double root(
+    char f[], 
+    char g[], 
+    double a, 
+    double b, 
+    double eps1, 
+    char* (*derivative_f_ptr)(char[]), 
+    char* (*derivative_g_ptr)(char[])
 );
 
-extern long double integral(
-    char f[],
-    long double a,
-    long double b,
-    long double eps2
+extern double integral(
+    char f[], 
+    double a, 
+    double b, 
+    double eps2
 );
 
 #endif

@@ -1,48 +1,39 @@
-#ASM_INT = integration.S
-#ASM_O = integration.S
-#C_O = integration.c
-#C_INT = integration.c
-
-#build: ## Build programm
-#	@gcc main.c -L. -lintegration -o main
-
-#help: ## Show help
-#	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_0-9-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
-
-#.PHONY: build help clean test
-
-#libintegration.so: $(ASM_INT) $(C_INT) ## Compile shared library
-#	@nasm -f elf32 $< -o $(ASM_O)
-#	@gcc $(C_INT) -o $(C_O)
-#	@gcc -shared $(C_O) $(ASM_O) -o $@
-
-#clean: ## Remove temporary files
-#	@rm -f main
-#	@rm -f libintegration.so
-#	@rm -f $(ASM_O)
-#	@rm -f $(C_O)
-
-#test: ## Test integration
-#	@gcc test.c -L. -lintegration -o test
-#	@./test
-
-#.DEFAULT:
-#	@printf 'Error: target %s does not exist\n' "'$@'"
-
+ASM_INT = integration.S
+ASM_O = asm_integration.o
+C_O = integration.o
+C_INT = integration.c
 CC = gcc
-
 CFLAGS = -Wall -Wextra -fPIC
 
-all: libintegration.so
+help: ## Show help
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_0-9-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
-libintegration.so: integration.o asm_integration.o
-	$(CC) -m32 -shared integration.o asm_integration.o -o libintegration.so
+.PHONY: build help clean test
 
-integration.o: integration.c
-	@gcc -m32 -std=c99 -c integration.c -o integration.o
+build: ## Build programm
+	@$(CC) -m32 main.c -L. -lintegration -o main
 
-asm_integration.o: asm_integration.S
-	@nasm -f elf32  asm_integration.S -o asm_integration.o
+run: ## Run programm
+	@LD_LIBRARY_PATH=. ./main
 
-clean:
-	rm -f *.o *.so
+libintegration.so: $(C_O) $(ASM_O) ## Compile shared library
+	$(CC) -m32 -shared $< $(ASM_O) -o $@
+
+$(C_O): $(C_INT) ## Compile C-part
+	@$(CC) -m32 -std=c99 -c $< -o $@
+
+$(ASM_O): $(ASM_INT) ## Compile ASM-part
+	@nasm -f elf32  $< -o $@
+
+clean: ## Remove temporary files
+	@rm -f main
+	@rm -f libintegration.so
+	@rm -f $(ASM_O)
+	@rm -f $(C_O)
+
+test: ## Test integration
+	@@$(CC) -m32 test.c -L. -lintegration -o test
+	@LD_LIBRARY_PATH=. ./test
+
+.DEFAULT:
+	@printf 'Error: target %s does not exist\n' "'$@'"

@@ -8,6 +8,7 @@
 int root_iterations = 0;
 
 //Возвращает имя производной для функции f.
+/**/
 char* derivative_f(char f[]) {
     if (strcmp(f, "f1") == 0) {
         return "df1";
@@ -33,7 +34,7 @@ char* derivative_g(char g[]) {
 
 
 //Вычисляет значение функции.
-long double y(char f[], long double x) {
+double y(char f[], double x) {
     if (strcmp(f, "f1") == 0) {
         return f1(x);
     }
@@ -46,7 +47,7 @@ long double y(char f[], long double x) {
 
 
 //Вычисляет значение производной.
-long double dy(char df[], long double x) {
+double dy(char df[], double x) {
     if (strcmp(df, "df1") == 0) {
         return df1(x);
     }
@@ -61,25 +62,25 @@ long double dy(char df[], long double x) {
  * F(x) = f(x) - g(x).
  * Точка пересечения f и g находится как корень F(x) = 0.
 */
-long double F(char f[], char g[], long double x) {
+double F(char f[], char g[], double x) {
     return y(f, x) - y(g, x);
 }
 
 //F'(x) = f'(x) - g'(x).
-long double dF(char df[], char dg[], long double x) {
+double dF(char df[], char dg[], double x) {
     return dy(df, x) - dy(dg, x);
 }
 
 
 //Поиск корня уравнения f(x) = g(x) на отрезке [a, b].
-long double root(char f[], char g[], long double a, long double b, long double eps1, char* (*derivative_f_ptr)(char[]), char* (*derivative_g_ptr)(char[])) {
-    long double left = a;
-    long double right = b;
-    long double f_left;
-    long double f_right;
-    long double new_left;
-    long double new_right;
-    long double der;
+double root(char f[], char g[], double a, double b, double eps1, char* (*derivative_f_ptr)(char[]), char* (*derivative_g_ptr)(char[])) {
+    double left = a;
+    double right = b;
+    double f_left;
+    double f_right;
+    double new_left;
+    double new_right;
+    double der;
     int tangent_left = 0;
 
     char* df = derivative_f_ptr(f);
@@ -98,7 +99,7 @@ long double root(char f[], char g[], long double a, long double b, long double e
     }
 
     if (f_left * f_right > 0.0L) {
-        printf("Bad segment [%Lf; %Lf] for %s and %s\n", a, b, f, g);
+        printf("Bad segment [%lf; %lf] for %s and %s\n", a, b, f, g);
         return 0.0L;
     }
 
@@ -109,7 +110,7 @@ long double root(char f[], char g[], long double a, long double b, long double e
      */
     der = dF(df, dg, left);
     if (der != 0.0L) {
-        long double test = left - F(f, g, left) / der;
+        double test = left - F(f, g, left) / der;
         if (test > left && test < right) {
             tangent_left = 1;
         }
@@ -160,14 +161,14 @@ long double root(char f[], char g[], long double a, long double b, long double e
 
 
 //Вычисление интеграла от f на [a, b] формулой средних прямоугольников.
-long double integral(char f[], long double a, long double b, long double eps2) {
+double integral(char f[], double a, double b, double eps2) {
     int n = 1;
     int i;
-    long double h;
-    long double x;
-    long double sum;
-    long double previous = 0.0L;
-    long double current;
+    double h;
+    double x;
+    double sum;
+    double previous = 0.0L;
+    double current;
 
     h = b - a;
     x = a + h / 2.0L;

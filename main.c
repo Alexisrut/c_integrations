@@ -21,4 +21,48 @@ int main()
     printf("df3(%lf) = %lf\n", x, df3(x));
 
     printf("\n");
+
+
+    /*
+        Интеграл
+    */
+
+    long double integral_result =
+        integral(
+            "f1",
+            0.0,
+            2.0,
+            0.0001
+        );
+
+    printf(
+        "Integral of f1 on [0,2] = %Lf\n",
+        integral_result
+    );
+
+    printf("\n");
+
+
+    /*
+        Корень уравнения:
+        f1(x) = f2(x)
+    */
+
+    long double root_result =
+        root(
+            "f1",
+            "f2",
+            0.0,
+            1.0,
+            0.0001,
+            derivative_f,
+            derivative_g
+        );
+
+    printf(
+        "Root of f1(x) = f2(x): %Lf\n",
+        root_result
+    );
+
+    return 0;
 }
