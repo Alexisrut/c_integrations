@@ -1,68 +1,29 @@
 #include <stdio.h>
+#include <math.h>
+#include <assert.h>
 
 #include "integration.h"
 
 int main()
 {
-    /*
-        Проверка ASM-функций
-    */
+    long double eps = 0.0001;
 
-    double x = 2.0;
+    long double x13 = root("f1", "f3", -1.9, -1.5, eps, derivative_f, derivative_g);
+    long double x23 = root("f2", "f3", -0.5, 0.0, eps, derivative_f, derivative_g);
+    long double x12 = root("f1", "f2", 0.0, 1.0, eps, derivative_f, derivative_g);
 
-    printf("f1(%lf) = %lf\n", x, f1(x));
-    printf("f2(%lf) = %lf\n", x, f2(x));
-    printf("f3(%lf) = %lf\n", x, f3(x));
+    long double area =
+        integral("f1", x13, x23, eps) - integral("f3", x13, x23, eps)
+        +
+        integral("f1", x23, x12, eps) - integral("f2", x23, x12, eps);
 
-    printf("\n");
+    printf("x13 = %Lf\n", x13);
+    printf("x23 = %Lf\n", x23);
+    printf("x12 = %Lf\n", x12);
 
-    printf("df1(%lf) = %lf\n", x, df1(x));
-    printf("df2(%lf) = %lf\n", x, df2(x));
-    printf("df3(%lf) = %lf\n", x, df3(x));
+    printf("Area = %Lf\n", area);
 
-    printf("\n");
-
-
-    /*
-        Интеграл
-    */
-
-    long double integral_result =
-        integral(
-            "f1",
-            0.0,
-            2.0,
-            0.0001
-        );
-
-    printf(
-        "Integral of f1 on [0,2] = %Lf\n",
-        integral_result
-    );
-
-    printf("\n");
-
-
-    /*
-        Корень уравнения:
-        f1(x) = f2(x)
-    */
-
-    long double root_result =
-        root(
-            "f1",
-            "f2",
-            0.0,
-            1.0,
-            0.0001,
-            derivative_f,
-            derivative_g
-        );
-
-    printf(
-        "Root of f1(x) = f2(x): %Lf\n",
-        root_result
-    );
+    assert(fabsl(area - 5.12019L) < 0.01L);
 
     return 0;
 }

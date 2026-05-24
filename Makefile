@@ -1,4 +1,4 @@
-ASM_INT = integration.S
+ASM_INT = asm_integration.S
 ASM_O = asm_integration.o
 C_O = integration.o
 C_INT = integration.c
@@ -13,7 +13,7 @@ help: ## Show help
 build: ## Build programm
 	@$(CC) -m32 main.c -L. -lintegration -o main
 
-run: ## Run programm
+run: ## Run programm(!build before run!)
 	@LD_LIBRARY_PATH=. ./main
 
 libintegration.so: $(C_O) $(ASM_O) ## Compile shared library

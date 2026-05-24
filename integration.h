@@ -8,8 +8,8 @@ extern double df1 (double x);
 extern double df2 (double x);
 extern double df3 (double x);
 
-char* derivative_f(char f[]);
-char* derivative_g(char g[]);
+extern char* derivative_f(char f[]);
+extern char* derivative_g(char g[]);
 
 
 extern double root(
